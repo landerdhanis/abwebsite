@@ -1,0 +1,76 @@
+---
+import { bookingHref } from '../data/site';
+interface Props {
+  /** Selector of an element; the bar stays hidden while it is on screen. */
+  hideWhileVisible?: string;
+}
+const { hideWhileVisible } = Astro.props;
+---
+
+<div class="sticky-reserve" data-hide-while={hideWhileVisible}>
+  <div class="sticky-reserve__inner">
+    <p>Het hele badhuis, alleen voor jullie.</p>
+    <a class="btn" href={bookingHref}>Reserveer</a>
+  </div>
+</div>
+
+<script>
+  const bar = document.querySelector<HTMLElement>('.sticky-reserve');
+  const sel = bar?.dataset.hideWhile;
+  const target = sel ? document.querySelector(sel) : null;
+  if (bar && target && 'IntersectionObserver' in window) {
+    new IntersectionObserver(([entry]) => {
+      bar.classList.toggle('is-hidden', entry.isIntersecting);
+    }, { rootMargin: '0px 0px -30% 0px' }).observe(target);
+  }
+</script>
+
+<style>
+  .sticky-reserve {
+    display: none;
+  }
+  @media (max-width: 47.99rem) {
+    .sticky-reserve {
+      display: block;
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 40;
+      padding: 0.6rem 0.75rem calc(0.6rem + env(safe-area-inset-bottom));
+      background: rgb(21 50 43 / 0.94);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--on-green);
+      border-top: 1px solid var(--line-on-green);
+      transition:
+        transform 420ms var(--ease-out),
+        opacity 300ms ease;
+    }
+    .sticky-reserve.is-hidden {
+      transform: translateY(110%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    :global(html.menu-open) .sticky-reserve {
+      transform: none;
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+  .sticky-reserve__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-left: 0.5rem;
+  }
+  .sticky-reserve p {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+  .sticky-reserve .btn {
+    flex: none;
+  }
+</style>

@@ -1,0 +1,120 @@
+---
+import { nav, site, bookingHref } from '../data/site';
+import Missing from './Missing.astro';
+---
+
+<footer class="footer">
+  <div class="wrap footer__grid">
+    <div class="footer__brand">
+      <p class="footer__name">Antwerps Badhuis</p>
+      <p class="footer__line">Privé wellness in Antwerpen. Sauna, hammam, jacuzzi en een binnenzwembad van {site.poolTemperature}, alleen voor jouw groep.</p>
+      <a class="btn" href={bookingHref}>Reserveer</a>
+    </div>
+
+    <div>
+      <h2 class="footer__h">Bezoek</h2>
+      <address>
+        {site.address ?? <Missing label="adres" />}
+      </address>
+      <p class="footer__row">{site.openingHours ?? <Missing label="openingsuren" />}</p>
+    </div>
+
+    <div>
+      <h2 class="footer__h">Contact</h2>
+      <p class="footer__row">{site.phone ? <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a> : <Missing label="telefoon" />}</p>
+      <p class="footer__row">{site.email ? <a href={`mailto:${site.email}`}>{site.email}</a> : <Missing label="e-mail" />}</p>
+    </div>
+
+    <nav aria-label="Voettekst">
+      <h2 class="footer__h">Pagina's</h2>
+      <ul>
+        {nav.map((item) => <li><a href={item.href}>{item.label}</a></li>)}
+      </ul>
+    </nav>
+  </div>
+  <div class="wrap footer__base">
+    <p>© {new Date().getFullYear()} Antwerps Badhuis</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--green-950);
+    color: var(--on-green);
+    padding-block: clamp(3.5rem, 7vw, 6rem) 2rem;
+  }
+  .footer__grid {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr 1fr 1fr;
+    gap: 2.5rem;
+  }
+  .footer__name {
+    font-family: var(--font-display);
+    font-size: 1.9rem;
+    line-height: 1.1;
+    margin-bottom: 0.75rem;
+  }
+  .footer__line {
+    color: var(--on-green-soft);
+    max-width: 30ch;
+    margin-bottom: 1.5rem;
+  }
+  .footer__h {
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--on-green-soft);
+    margin-bottom: 1rem;
+  }
+  address {
+    font-style: normal;
+    margin-bottom: 0.6rem;
+  }
+  .footer__row + .footer__row {
+    margin-top: 0.6rem;
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.45rem;
+  }
+  ul a {
+    text-decoration: none;
+    color: var(--on-green-soft);
+    transition: color 200ms ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    ul a:hover {
+      color: var(--on-green);
+    }
+  }
+  .footer__base {
+    margin-top: 3.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line-on-green);
+    font-size: 0.875rem;
+    color: var(--on-green-soft);
+  }
+  @media (max-width: 60rem) {
+    .footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .footer__brand {
+      grid-column: 1 / -1;
+    }
+  }
+  @media (max-width: 47.99rem) {
+    .footer {
+      padding-bottom: 6rem;
+    }
+  }
+  @media (max-width: 30rem) {
+    .footer__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

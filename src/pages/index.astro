@@ -1,0 +1,690 @@
+---
+import Base from '../layouts/Base.astro';
+import Missing from '../components/Missing.astro';
+import PhotoSlot from '../components/PhotoSlot.astro';
+import { site, bookingHref } from '../data/site';
+
+const rooms = [
+  { name: 'Sauna', kind: 'Droge warmte', text: 'Hout, hitte en stilte. Opwarmen tot je helemaal loskomt.' },
+  { name: 'Hammam', kind: 'Vochtige warmte', text: 'Stoom en warme steen, zoals in een klassiek badhuis.' },
+  { name: 'Jacuzzi', kind: 'Bruisend water', text: 'Samen wegzakken in warm, borrelend water.' },
+  { name: 'Zwembad', kind: 'Binnenbad', text: 'Zwemmen, drijven of gewoon niets doen.', temp: site.poolTemperature },
+];
+
+const offers = [
+  {
+    href: '/wellness',
+    title: 'Wellness privé',
+    who: ['Koppels', 'Vriendengroepen'],
+    text: 'Jullie huren het volledige badhuis: sauna, hammam, jacuzzi en zwembad. Geen andere gasten, geen gedeelde ruimtes.',
+    priceLabel: 'Prijs per tijdslot',
+    missing: 'prijs per tijdslot',
+    photo: 'Wellness: hammam of jacuzzi met gasten',
+    cta: 'Meer over wellness',
+  },
+  {
+    href: '/feestjes-events',
+    title: 'Feestjes & events',
+    who: ['Kinderfeestjes', 'Vrijgezellen', 'Familiefeesten'],
+    text: `Een zwembad van ${site.poolTemperature} en een badhuis dat alleen van jullie is. Om samen iets te vieren, van een kinderverjaardag tot een vrijgezellen.`,
+    priceLabel: 'Formules & prijzen',
+    missing: 'formules en prijzen',
+    photo: 'Feestje aan het zwembad',
+    cta: 'Meer over feestjes',
+  },
+  {
+    href: '/zwemlessen',
+    title: 'Zwemlessen',
+    who: ['Kinderen', 'Vrouwen'],
+    text: `Leren zwemmen in warm water van ${site.poolTemperature}. Lessen voor kinderen en aparte lessen voor vrouwen.`,
+    priceLabel: 'Lesmomenten & prijs',
+    missing: 'lesmomenten en prijs',
+    photo: 'Zwemles in het binnenbad',
+    cta: 'Meer over zwemlessen',
+  },
+];
+
+const arrow = '<svg aria-hidden="true" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h11M9 4l4 4-4 4"/></svg>';
+---
+
+<Base
+  title="Antwerps Badhuis · Privé wellness in Antwerpen"
+  description="Huur het hele badhuis voor jouw groep: sauna, hammam, jacuzzi en een binnenzwembad van 32°C in Antwerpen. Ook voor feestjes en zwemlessen."
+  stickyHideWhile="#hero"
+>
+  <!-- Hero: the door hanger -->
+  <section class="hero" id="hero" aria-labelledby="hero-title">
+    <div class="hero__field">
+      <span class="hero__string" aria-hidden="true"></span>
+      <div class="hanger">
+        <h1 id="hero-title">Het hele badhuis. Alleen voor jullie.</h1>
+        <p class="hanger__lead">
+          Sauna, hammam, jacuzzi en een binnenzwembad van {site.poolTemperature}, midden in Antwerpen. Je reserveert een tijdslot en er is niemand anders.
+        </p>
+        <div class="hanger__actions">
+          <a class="btn" href={bookingHref}>Reserveer een tijdslot</a>
+          <a class="btn btn--ghost" href="/prijzen-info">Prijzen & uren</a>
+        </div>
+        <p class="hanger__sign" aria-hidden="true"><span>Niet storen</span></p>
+      </div>
+    </div>
+    <PhotoSlot class="hero__photo" label={`Zwembad ${site.poolTemperature}, liefst met avondlicht`} />
+  </section>
+
+  <!-- At a glance: the facts people dig for today -->
+  <section class="glance" aria-labelledby="glance-title">
+    <div class="wrap glance__inner">
+      <h2 id="glance-title" class="glance__title">In één oogopslag</h2>
+      <dl class="glance__list">
+        <div>
+          <dt>Wellness privé</dt>
+          <dd>{site.priceFrom ?? <Missing label="prijs per tijdslot" />}</dd>
+        </div>
+        <div>
+          <dt>Openingsuren</dt>
+          <dd>{site.openingHours ?? <Missing label="openingsuren" />}</dd>
+        </div>
+        <div>
+          <dt>Groep</dt>
+          <dd>{site.groupSize ?? <Missing label="max. aantal personen" />}</dd>
+        </div>
+        <div>
+          <dt>Adres</dt>
+          <dd>{site.address ?? <Missing label="adres" />}</dd>
+        </div>
+      </dl>
+      <a class="link-arrow glance__more" href="/prijzen-info">Alle prijzen & praktische info <Fragment set:html={arrow} /></a>
+    </div>
+  </section>
+
+  <!-- Key rack: the four rooms -->
+  <section class="rooms" aria-labelledby="rooms-title">
+    <div class="wrap">
+      <div class="rooms__head">
+        <h2 id="rooms-title">Wat er in huis is</h2>
+        <p>Vier manieren om warm te worden. Tijdens je tijdslot zijn ze allemaal van jullie.</p>
+      </div>
+      <ul class="rack" role="list">
+        {rooms.map((room) => (
+          <li class="tag">
+            <span class="tag__ring" aria-hidden="true"></span>
+            <p class="tag__kind">{room.kind}</p>
+            <h3 class="tag__name">{room.name}</h3>
+            {room.temp && <p class="tag__temp">{room.temp}</p>}
+            <p class="tag__text">{room.text}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- Offers: three clearly different reasons to come -->
+  <section class="offers" aria-labelledby="offers-title">
+    <div class="wrap">
+      <h2 id="offers-title" class="offers__title">Waarvoor kom je?</h2>
+      <div class="offers__list">
+        {offers.map((offer) => (
+          <article class="offer">
+            <PhotoSlot class="offer__photo" tone="porcelain" label={offer.photo} />
+            <div class="offer__body">
+              <h3><a href={offer.href}>{offer.title}</a></h3>
+              <ul class="offer__who" aria-label="Voor wie">
+                {offer.who.map((w) => <li>{w}</li>)}
+              </ul>
+              <p class="offer__text">{offer.text}</p>
+              <dl class="offer__meta">
+                <dt>{offer.priceLabel}</dt>
+                <dd><Missing label={offer.missing} /></dd>
+              </dl>
+              <a class="link-arrow" href={offer.href} aria-hidden="true" tabindex="-1">{offer.cta} <Fragment set:html={arrow} /></a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Photo teaser -->
+  <section class="peek" aria-labelledby="peek-title">
+    <div class="wrap">
+      <div class="peek__head">
+        <h2 id="peek-title">Kijk even binnen</h2>
+        <a class="link-arrow" href="/fotos">Alle foto's <Fragment set:html={arrow} /></a>
+      </div>
+      <div class="peek__grid">
+        <PhotoSlot class="peek__a" label="Zwembad, totaalbeeld" />
+        <PhotoSlot class="peek__b" label="Hammam" />
+        <PhotoSlot class="peek__c" label="Sauna" />
+        <PhotoSlot class="peek__d" label="Jacuzzi" />
+        <PhotoSlot class="peek__e" label="Detail: handdoeken, licht, tegels" />
+      </div>
+    </div>
+  </section>
+
+  <!-- Close -->
+  <section class="close" aria-labelledby="close-title">
+    <div class="wrap close__inner">
+      <h2 id="close-title">Hang het bordje uit.</h2>
+      <div class="close__body">
+        <p>Kies een dag en een tijdslot. Voor even is het Antwerps Badhuis alleen van jullie.</p>
+        <a class="btn" href={bookingHref}>Reserveer een tijdslot</a>
+        <p class="close__alt">
+          Liever eerst iets vragen? Bel {site.phone ? <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a> : <Missing label="telefoon" />} of lees de <a href="/faq">veelgestelde vragen</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ── Hero ─────────────────────────────────────────── */
+  .hero {
+    display: grid;
+    grid-template-columns: 55fr 45fr;
+    min-height: min(calc(100svh - var(--header-h)), 54rem);
+    background: var(--green-900);
+    color: var(--on-green);
+  }
+  .hero__field {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: clamp(4.5rem, 9vh, 7rem) var(--gutter) clamp(3rem, 7vh, 5rem);
+  }
+  .hero__string {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 1px;
+    height: calc(clamp(4.5rem, 9vh, 7rem) + 30px);
+    background: linear-gradient(var(--brass), var(--brass) 80%, transparent);
+    opacity: 0.8;
+  }
+  .hanger {
+    --hole-y: 30px;
+    position: relative;
+    width: min(100%, 34rem);
+    padding: 5rem clamp(1.5rem, 3.5vw, 3rem) 2.25rem;
+    background: var(--porcelain);
+    color: var(--ink);
+    border-radius: 50% 50% var(--radius) var(--radius) / 7.5rem 7.5rem var(--radius) var(--radius);
+    box-shadow:
+      0 30px 60px -30px rgb(0 0 0 / 0.55),
+      0 2px 6px rgb(0 0 0 / 0.18);
+    -webkit-mask: radial-gradient(circle 15px at 50% var(--hole-y), transparent 97%, #000 100%);
+    mask: radial-gradient(circle 15px at 50% var(--hole-y), transparent 97%, #000 100%);
+    transform-origin: 50% var(--hole-y);
+    animation: settle 1600ms var(--ease-soft) 150ms both;
+  }
+  /* Letterpress hairline following the arch */
+  .hanger::before {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border: 1px solid var(--line);
+    border-radius: 50% 50% calc(var(--radius) - 6px) calc(var(--radius) - 6px) / 7rem 7rem calc(var(--radius) - 6px) calc(var(--radius) - 6px);
+    pointer-events: none;
+  }
+  @keyframes settle {
+    0% { transform: rotate(-2.4deg); }
+    45% { transform: rotate(0.9deg); }
+    75% { transform: rotate(-0.3deg); }
+    100% { transform: rotate(0deg); }
+  }
+  .hanger h1 {
+    font-size: clamp(2.5rem, 4.6vw, 4.25rem);
+    font-variation-settings: 'opsz' 96;
+    text-align: center;
+    margin-bottom: 1.25rem;
+  }
+  .hanger__lead {
+    color: var(--ink-soft);
+    text-align: center;
+    max-width: 34ch;
+    margin: 0 auto 2rem;
+  }
+  .hanger__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+  }
+  .hanger__actions .btn--ghost {
+    color: var(--ink);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .hanger__actions .btn--ghost:hover {
+      --btn-bg: rgb(19 33 29 / 0.05);
+    }
+  }
+  .hanger__sign {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2.25rem;
+    color: var(--brass-ink);
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+  }
+  .hanger__sign::before,
+  .hanger__sign::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.35;
+  }
+  .hanger__sign span {
+    padding-left: 0.32em;
+  }
+  .hero :global(.hero__photo) {
+    border-radius: 0;
+    min-height: 100%;
+  }
+
+  /* ── Glance ──────────────────────────────────────── */
+  .glance {
+    background: var(--porcelain);
+    border-bottom: 1px solid var(--line);
+  }
+  .glance__inner {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    gap: 1.5rem 2.5rem;
+    padding-block: 2.5rem;
+  }
+  .glance__title {
+    font-size: 1.5rem;
+  }
+  .glance__list {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin: 0;
+  }
+  .glance__list div {
+    border-left: 1px solid var(--line);
+    padding-left: 1.25rem;
+  }
+  .glance dt {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    margin-bottom: 0.35rem;
+  }
+  .glance dd {
+    margin: 0;
+  }
+  .glance__more {
+    color: var(--brass-ink);
+    white-space: nowrap;
+  }
+
+  /* ── Rooms: key rack ─────────────────────────────── */
+  .rooms {
+    background: var(--green-800);
+    color: var(--on-green);
+    padding-block: clamp(5rem, 11vw, 9rem);
+  }
+  .rooms__head {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: end;
+    gap: 2rem;
+    margin-bottom: clamp(3rem, 6vw, 5rem);
+  }
+  .rooms__head h2 {
+    font-size: clamp(2.25rem, 5vw, 4rem);
+  }
+  .rooms__head p {
+    color: var(--on-green-soft);
+    max-width: 36ch;
+    justify-self: end;
+  }
+  .rack {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1rem, 2.5vw, 2rem);
+    list-style: none;
+    margin: 0;
+    padding: 2.25rem 0 0;
+  }
+  /* Brass rail the tags hang from */
+  .rack::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -0.5rem;
+    right: -0.5rem;
+    height: 3px;
+    border-radius: 3px;
+    background: linear-gradient(var(--brass-hi), var(--brass));
+    box-shadow: 0 6px 10px -4px rgb(0 0 0 / 0.45);
+  }
+  .tag {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 23rem;
+    padding: 3.25rem 1.5rem 2.5rem;
+    background: var(--green-900);
+    border: 1px solid var(--line-on-green);
+    border-radius: 1.25rem 1.25rem 999px 999px;
+    text-align: center;
+    transform-origin: 50% -2.25rem;
+    transition: transform 700ms var(--ease-soft);
+    box-shadow: 0 24px 40px -28px rgb(0 0 0 / 0.7);
+  }
+  /* Short hook from rail to ring */
+  .tag::before {
+    content: '';
+    position: absolute;
+    top: -2.25rem;
+    left: 50%;
+    width: 1px;
+    height: 2.4rem;
+    background: var(--brass);
+  }
+  .tag__ring {
+    position: absolute;
+    top: 0.9rem;
+    left: 50%;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: -0.625rem;
+    border-radius: 50%;
+    border: 2px solid var(--brass);
+    background: var(--green-800);
+  }
+  .tag__kind {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--on-green-soft);
+    margin-bottom: 0.6rem;
+  }
+  .tag__name {
+    font-size: clamp(1.9rem, 2.6vw, 2.5rem);
+  }
+  .tag__temp {
+    font-family: var(--font-display);
+    font-size: clamp(2.75rem, 4vw, 3.75rem);
+    line-height: 1;
+    color: var(--brass);
+    margin-top: 0.5rem;
+    font-variant-numeric: lining-nums;
+  }
+  .tag__text {
+    color: var(--on-green-soft);
+    font-size: 0.9375rem;
+    margin-top: auto;
+    padding-top: 1.5rem;
+    max-width: 22ch;
+    margin-inline: auto;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .tag:hover {
+      transform: rotate(1.6deg);
+    }
+    .tag:nth-child(even):hover {
+      transform: rotate(-1.6deg);
+    }
+  }
+
+  /* ── Offers ──────────────────────────────────────── */
+  .offers {
+    padding-block: clamp(5rem, 11vw, 9rem);
+  }
+  .offers__title {
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    margin-bottom: clamp(2.5rem, 6vw, 4.5rem);
+  }
+  .offers__list {
+    display: grid;
+    gap: clamp(3.5rem, 8vw, 6.5rem);
+  }
+  .offer {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: clamp(1.75rem, 5vw, 5rem);
+    align-items: center;
+  }
+  .offer:nth-child(even) {
+    grid-template-columns: 5fr 7fr;
+  }
+  .offer:nth-child(even) :global(.offer__photo) {
+    order: 2;
+  }
+  .offer :global(.offer__photo) {
+    aspect-ratio: 4 / 3;
+    min-height: 0;
+  }
+  .offer:nth-child(2) :global(.offer__photo) {
+    aspect-ratio: 5 / 4;
+  }
+  .offer h3 {
+    font-size: clamp(2rem, 3.6vw, 3rem);
+    margin-bottom: 1rem;
+  }
+  .offer h3 a {
+    text-decoration: none;
+  }
+  .offer h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .offer {
+    position: relative;
+  }
+  .offer__who {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+  }
+  .offer__who li {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    background: var(--porcelain-2);
+    color: var(--green-800);
+  }
+  .offer__text {
+    color: var(--ink-soft);
+    max-width: 44ch;
+  }
+  .offer__meta {
+    margin: 1.5rem 0 1.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+  }
+  .offer__meta dt {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 0.35rem;
+  }
+  .offer__meta dd {
+    margin: 0;
+  }
+  .offer .link-arrow {
+    color: var(--brass-ink);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .offer:hover .link-arrow svg {
+      transform: translateX(3px);
+    }
+  }
+
+  /* ── Peek ────────────────────────────────────────── */
+  .peek {
+    background: var(--porcelain-2);
+    padding-block: clamp(4.5rem, 9vw, 7.5rem);
+  }
+  .peek__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .peek__head h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+  .peek__head .link-arrow {
+    color: var(--brass-ink);
+  }
+  .peek__grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 15rem 15rem;
+    gap: 0.75rem;
+  }
+  .peek__grid :global(.peek__a) {
+    grid-row: span 2;
+  }
+  .peek__grid :global(.photo) {
+    min-height: 0;
+  }
+
+  /* ── Close ───────────────────────────────────────── */
+  .close {
+    background: var(--green-900);
+    color: var(--on-green);
+    padding-block: clamp(5rem, 12vw, 10rem);
+  }
+  .close__inner {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: clamp(2rem, 6vw, 6rem);
+    align-items: end;
+  }
+  .close h2 {
+    font-size: clamp(2.75rem, 7vw, 6rem);
+    line-height: 0.98;
+  }
+  .close__body > p:first-child {
+    font-size: 1.1875rem;
+    color: var(--on-green);
+    max-width: 32ch;
+    margin-bottom: 1.75rem;
+  }
+  .close__alt {
+    margin-top: 1.75rem;
+    color: var(--on-green-soft);
+    font-size: 0.9375rem;
+  }
+
+  /* ── Responsive ──────────────────────────────────── */
+  @media (max-width: 68rem) {
+    .glance__list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .rack {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      row-gap: 4.5rem;
+    }
+    .rack::before {
+      display: none;
+    }
+    .tag {
+      min-height: 19rem;
+    }
+    .tag::before {
+      height: 1.6rem;
+      top: -1.6rem;
+    }
+  }
+
+  @media (max-width: 47.99rem) {
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+    .hero :global(.hero__photo) {
+      order: -1;
+      min-height: 40svh;
+      align-items: flex-start;
+    }
+    .hero__field {
+      padding: 0 var(--gutter) 3rem;
+      margin-top: -5.5rem;
+    }
+    .hero__string {
+      display: none;
+    }
+    .hanger {
+      padding-top: 4.25rem;
+      border-radius: 50% 50% var(--radius) var(--radius) / 5rem 5rem var(--radius) var(--radius);
+    }
+    .hanger::before {
+      border-radius: 50% 50% calc(var(--radius) - 6px) calc(var(--radius) - 6px) / 4.6rem 4.6rem calc(var(--radius) - 6px) calc(var(--radius) - 6px);
+    }
+    .hanger__actions .btn {
+      flex: 1 1 100%;
+    }
+    .glance__inner {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .glance__list {
+      grid-row: auto;
+      gap: 1.25rem 1rem;
+    }
+    .glance__more {
+      white-space: normal;
+    }
+    .glance__list div {
+      padding-left: 0.9rem;
+    }
+    .rooms__head {
+      grid-template-columns: 1fr;
+    }
+    .rooms__head p {
+      justify-self: start;
+    }
+    .rack {
+      gap: 3.5rem 0.75rem;
+    }
+    .tag {
+      min-height: 0;
+      padding: 2.75rem 0.9rem 2.25rem;
+    }
+    .tag__text {
+      font-size: 0.875rem;
+    }
+    .offer,
+    .offer:nth-child(even) {
+      grid-template-columns: 1fr;
+    }
+    .offer:nth-child(even) :global(.offer__photo) {
+      order: 0;
+    }
+    .peek__grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 14rem 9rem 9rem;
+    }
+    .peek__grid :global(.peek__a) {
+      grid-row: auto;
+      grid-column: 1 / -1;
+    }
+    .close__inner {
+      grid-template-columns: 1fr;
+    }
+    .close .btn {
+      width: 100%;
+    }
+  }
+</style>
